@@ -1,12 +1,13 @@
 import os
 import base64
+import time
 from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
+from config import Config
 
 app = Flask(__name__)
-
-UPLOAD_FOLDER = 'uploads'
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+CORS(app)
+Config.init_app()
 
 @app.route('/')
 def index():
@@ -24,12 +25,8 @@ def upload_image():
         header, encoded = image_data.split(",", 1)
         image_bytes = base64.b64decode(encoded)
 
-        file_name = f"sketch-{int(os.path.getmtime(UPLOAD_FOLDER) * 1000)}.png" # Simple unique name
-        # Better unique name using timestamp
-        import time
         file_name = f"sketch-{int(time.time())}.png"
-        
-        file_path = os.path.join(UPLOAD_FOLDER, file_name)
+        file_path = os.path.join(Config.UPLOAD_FOLDER, file_name)
         
         with open(file_path, "wb") as f:
             f.write(image_bytes)
@@ -48,4 +45,4 @@ def status():
     })
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=Config.DEBUG, port=Config.PORT)

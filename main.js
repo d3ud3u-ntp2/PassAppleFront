@@ -159,17 +159,11 @@ clearBtn.addEventListener('click', () => {
 saveBtn.addEventListener('click', () => {
     const imageData = canvas.toDataURL('image/png');
 
-    // Save locally (download)
-    const link = document.createElement('a');
-    link.download = `sketch-${Date.now()}.png`;
-    link.href = imageData;
-    link.click();
-
     // Save to server
     saveBtn.disabled = true;
     saveBtn.textContent = 'Saving...';
 
-    fetch('/upload', {
+    fetch(CONFIG.API_URL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
