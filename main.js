@@ -5,24 +5,60 @@ const sizeValueSpan = document.getElementById('sizeValue');
 const clearBtn = document.getElementById('clearBtn');
 const saveBtn = document.getElementById('saveBtn');
 
+const undoBtn = document.getElementById('undoBtn');
+const redoBtn = document.getElementById('redoBtn');
+
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
+// History management
+const MAX_HISTORY = 10;
+const BG_COLOR = '#000000';
+const STROKE_COLOR = '#ffffff';
+let history = [];
+let redoStack = [];
+
+function saveState() {
+    if (history.length >= MAX_HISTORY + 1) { // +1 because first state is initial
+        history.shift();
+    }
+    history.push(canvas.toDataURL());
+    redoStack = []; // Clear redo stack on new action
+    updateButtons();
+}
+
+function updateButtons() {
+    undoBtn.disabled = history.length <= 1;
+    redoBtn.disabled = redoStack.length === 0;
+    undoBtn.style.opacity = undoBtn.disabled ? '0.3' : '1';
+    redoBtn.style.opacity = redoBtn.disabled ? '0.3' : '1';
+}
+
 // Initialize canvas size
 function resizeCanvas() {
+    // Save current content if it exists
+    const tempImage = history.length > 0 ? canvas.toDataURL() : null;
+
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    
-    // Set initial canvas state (black background is handled by CSS, but we can fill it if needed for saves)
-    ctx.fillStyle = '#000000';
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Reset drawing settings as resize clears context
+
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    ctx.strokeStyle = '#FFFFFF';
+    ctx.strokeStyle = STROKE_COLOR;
     ctx.lineWidth = brushSizeInput.value;
+
+    if (tempImage) {
+        const img = new Image();
+        img.onload = () => ctx.drawImage(img, 0, 0);
+        img.src = tempImage;
+    } else {
+        saveState(); // Initial state
+    }
 }
 
 window.addEventListener('resize', resizeCanvas);
@@ -50,6 +86,9 @@ function draw(e) {
 }
 
 function stopDrawing() {
+    if (isDrawing) {
+        saveState();
+    }
     isDrawing = false;
 }
 
@@ -82,14 +121,72 @@ brushSizeInput.addEventListener('input', (e) => {
     sizeValueSpan.textContent = `${size}px`;
 });
 
+undoBtn.addEventListener('click', () => {
+    if (history.length > 1) {
+        redoStack.push(history.pop());
+        const state = history[history.length - 1];
+        const img = new Image();
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = state;
+        updateButtons();
+    }
+});
+
+redoBtn.addEventListener('click', () => {
+    if (redoStack.length > 0) {
+        const state = redoStack.pop();
+        history.push(state);
+        const img = new Image();
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = state;
+        updateButtons();
+    }
+});
+
 clearBtn.addEventListener('click', () => {
-    ctx.fillStyle = '#000000';
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = BG_COLOR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    saveState();
 });
 
 saveBtn.addEventListener('click', () => {
+    const imageData = canvas.toDataURL('image/png');
+
+    // Save locally (download)
     const link = document.createElement('a');
     link.download = `sketch-${Date.now()}.png`;
-    link.href = canvas.toDataURL('image/png');
+    link.href = imageData;
     link.click();
+
+    // Save to server
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+
+    fetch('/upload', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: imageData }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Saved to server successfully!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Error saving to server.');
+        })
+        .finally(() => {
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save';
+        });
 });

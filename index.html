@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,10 +10,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="app-container">
+        <div class="background-layer">
+            <img src="static/images/apple_base.jpg" alt="Background">
+        </div>
         <canvas id="drawingCanvas"></canvas>
-        
+
         <div class="ui-overlay">
             <div class="toolbar glass">
                 <div class="tool-group">
@@ -21,13 +26,17 @@
                     <span id="sizeValue">5px</span>
                 </div>
                 <div class="divider"></div>
+                <button id="undoBtn" class="btn secondary">Undo</button>
+                <button id="redoBtn" class="btn secondary">Redo</button>
+                <div class="divider"></div>
                 <button id="clearBtn" class="btn secondary">Clear</button>
                 <button id="saveBtn" class="btn primary">Save</button>
             </div>
         </div>
-        
+
         <div class="hint">Draw with finger or mouse</div>
     </div>
     <script src="main.js"></script>
 </body>
+
 </html>
