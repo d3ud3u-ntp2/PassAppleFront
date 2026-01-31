@@ -32,7 +32,8 @@ def upload_image():
             f.write(image_bytes)
 
         print(f"File saved: {file_path}")
-        return jsonify({"status": "success", "message": f"Saved as {file_name}", "path": file_path})
+        file_path2 = f"http://127.0.0.1:5000/static/output/apple-1769838974.png"
+        return jsonify({"status": "success", "message": f"Saved as {file_name}", "path": file_path2})
     except Exception as e:
         print(f"Error saving image: {e}")
         return jsonify({"status": "error", "message": str(e)}), 500

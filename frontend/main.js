@@ -156,6 +156,11 @@ clearBtn.addEventListener('click', () => {
     saveState();
 });
 
+const resultModal = document.getElementById('resultModal');
+const closeModal = document.getElementById('closeModal');
+const resultImage = document.getElementById('resultImage');
+const downloadBtn = document.getElementById('downloadBtn');
+
 saveBtn.addEventListener('click', () => {
     const imageData = canvas.toDataURL('image/png');
 
@@ -173,7 +178,13 @@ saveBtn.addEventListener('click', () => {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            alert('Saved to server successfully!');
+            if (data.status === 'success' && data.path) {
+                // Show the modal with the returned image path
+                resultImage.src = data.path;
+                resultModal.classList.remove('hidden');
+            } else {
+                alert('Saved to server successfully, but no return path found!');
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
@@ -183,4 +194,23 @@ saveBtn.addEventListener('click', () => {
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save';
         });
+});
+
+closeModal.addEventListener('click', () => {
+    resultModal.classList.add('hidden');
+});
+
+resultModal.addEventListener('click', (e) => {
+    if (e.target === resultModal) {
+        resultModal.classList.add('hidden');
+    }
+});
+
+downloadBtn.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.href = resultImage.src;
+    link.download = 'result.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 });

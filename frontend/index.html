@@ -35,6 +35,22 @@
         </div>
 
         <div class="hint">Draw with finger or mouse</div>
+
+        <!-- Result Modal -->
+        <div id="resultModal" class="modal-overlay hidden">
+            <div class="modal-content glass">
+                <div class="modal-header">
+                    <h3>Processed Result</h3>
+                    <button id="closeModal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <img id="resultImage" src="" alt="Result Image">
+                </div>
+                <div class="modal-footer">
+                    <button id="downloadBtn" class="btn primary">Download Result</button>
+                </div>
+            </div>
+        </div>
     </div>
     <script src="config.js"></script>
     <script src="main.js"></script>
