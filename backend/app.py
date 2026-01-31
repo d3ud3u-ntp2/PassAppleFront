@@ -15,6 +15,7 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload_image():
+    time.sleep(10)
     try:
         data = request.json
         image_data = data.get('image')

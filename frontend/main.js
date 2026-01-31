@@ -157,6 +157,7 @@ clearBtn.addEventListener('click', () => {
 });
 
 const resultModal = document.getElementById('resultModal');
+const loadingOverlay = document.getElementById('loadingOverlay');
 const closeModal = document.getElementById('closeModal');
 const resultImage = document.getElementById('resultImage');
 const downloadBtn = document.getElementById('downloadBtn');
@@ -167,6 +168,7 @@ saveBtn.addEventListener('click', () => {
     // Save to server
     saveBtn.disabled = true;
     saveBtn.textContent = 'Saving...';
+    loadingOverlay.classList.remove('hidden');
 
     fetch(CONFIG.API_URL, {
         method: 'POST',
@@ -193,6 +195,7 @@ saveBtn.addEventListener('click', () => {
         .finally(() => {
             saveBtn.disabled = false;
             saveBtn.textContent = 'Save';
+            loadingOverlay.classList.add('hidden');
         });
 });
 
