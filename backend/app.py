@@ -11,7 +11,7 @@ Config.init_app()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('apple.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_image():

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sleek Sketch - White on Black</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <div class="background-layer">
+            <img id="baseImage" src="static/images/apple_base.jpg" alt="Background">
+        </div>
+
+        <canvas id="drawingCanvas"></canvas>
+
+        <div class="ui-overlay">
+            <div class="toolbar glass">
+                <div class="tool-group">
+                    <label for="brushSize">Size</label>
+                    <input type="range" id="brushSize" min="1" max="50" value="5">
+                    <span id="sizeValue">5px</span>
+                </div>
+                <div class="divider"></div>
+                <button id="undoBtn" class="btn secondary">Undo</button>
+                <button id="redoBtn" class="btn secondary">Redo</button>
+                <div class="divider"></div>
+                <button id="clearBtn" class="btn secondary">Clear</button>
+                <button id="saveBtn" class="btn primary">Save</button>
+                <a href="index.html" class="btn secondary">Back</a>
+            </div>
+        </div>
+
+        <div class="hint">Draw with finger or mouse</div>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="modal-overlay hidden">
+            <div class="loader-content">
+                <div class="modern-spinner"></div>
+                <p>Processing Image...</p>
+            </div>
+        </div>
+
+        <!-- Result Modal -->
+        <div id="resultModal" class="modal-overlay hidden">
+            <div class="modal-content glass">
+                <div class="modal-header">
+                    <h3>Processed Result</h3>
+                    <button id="closeModal" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <img id="resultImage" src="" alt="Result Image">
+                </div>
+                <div class="modal-footer">
+                    <button id="downloadBtn" class="btn primary">Download Result</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

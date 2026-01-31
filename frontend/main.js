@@ -114,6 +114,22 @@ canvas.addEventListener('touchstart', startDrawing, { passive: false });
 canvas.addEventListener('touchmove', draw, { passive: false });
 canvas.addEventListener('touchend', stopDrawing, { passive: false });
 
+// Fruit Selection Logic (Handle via URL parameter)
+const baseImage = document.getElementById('baseImage');
+const urlParams = new URLSearchParams(window.location.search);
+const fruit = urlParams.get('fruit');
+
+const fruitMap = {
+    'apple': 'static/images/apple_base.jpg',
+    'maron': 'static/images/maron_base.png',
+    'radish': 'static/images/radish_base.png',
+    'watermelon': 'static/images/watermeron_base.png'
+};
+
+if (fruit && fruitMap[fruit]) {
+    baseImage.src = fruitMap[fruit];
+}
+
 // Controls
 brushSizeInput.addEventListener('input', (e) => {
     const size = e.target.value;
