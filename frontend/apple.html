@@ -64,12 +64,14 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            padding: 0.5rem;
+            width: 44px;
+            height: 44px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .tool-btn:hover {
@@ -82,10 +84,24 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
-        .tool-btn svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
+        .tool-btn.bright {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tool-btn.bright:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .tool-btn img {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            transition: transform 0.2s ease;
+        }
+
+        .tool-btn:hover img {
+            transform: scale(1.1);
         }
 
         .hint {
@@ -127,26 +143,28 @@
     </div>
 
     <div class="app-container">
-        <div class="background-layer">
-            <img id="baseImage" src="static/images/apple_base.jpg" alt="Background">
+        <div id="transformLayer">
+            <div class="background-layer">
+                <img id="baseImage" src="static/images/apple_base.jpg" alt="Background">
+            </div>
+            <canvas id="drawingCanvas"></canvas>
         </div>
-
-        <canvas id="drawingCanvas"></canvas>
 
         <div class="ui-overlay">
             <div class="toolbar glass">
                 <div class="tool-group">
-                    <button id="penBtn" class="tool-btn active" data-i18n="pen" title="Pen">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                        </svg>
+                    <button id="penBtn" class="tool-btn active" data-i18n="pen" data-i18n-title="pen" data-i18n-no-text>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0zIDE3LjI1VjIxaDMuNzVMMTcuODEgOS45NGwtMy43NS0zLjc1TDMgMTcuMjV6TTIwLjcxIDcuMDRjLjM5LS4zOS4zOS0xLjAyIDAtMS40MWwtMi4zNC0yLjM0Yy0uMzktLjM5LTEuMDItLjM5LTEuNDEgMGwtMS44MyAxLjgzIDMuNzUgMy43NSAxLjgzLTEuODN6Ii8+PC9zdmc+"
+                            alt="Pen">
                     </button>
-                    <button id="eraserBtn" class="tool-btn" data-i18n="eraser" title="Eraser">
-                        <svg viewBox="0 0 24 24">
-                            <path
-                                d="M16.24 3.56l4.95 4.94c.39.39.39 1.02 0 1.41L12.12 19.01c-.18.19-.44.3-.71.3H4v-7.41c0-.27.11-.52.3-.71l9.12-9.12c.39-.39 1.03-.39 1.42.01zM11 17l6-6-4-4-6 6v4h4z" />
-                        </svg>
+                    <button id="eraserBtn" class="tool-btn" data-i18n="eraser" data-i18n-title="eraser"
+                        data-i18n-no-text>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xOSAxOEg1Yy0xLjEgMC0yLS45LTItMlY4YzAtMS4xLjktMiAyLTJoMTRjMS4xIDAgMiAuOSAyIDJ2OGMwIDEuMS0uOSAyLTItMnpNNyAxNmg0VjhIN3Y4em0xMiAwdi04aC02djhoNnoiLz48L3N2Zz4="
+                            alt="Eraser">
+                    </button>
+                    <button id="textBtn" class="tool-btn" data-i18n="text" data-i18n-title="text" data-i18n-no-text>
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik01IDR2M2g1LjV2MTJoM1Y3SDE5VjR6Ii8+PC9zdmc+"
+                            alt="Text">
                     </button>
                     <div class="divider"></div>
                     <label for="brushSize" data-i18n="brush-size">Size</label>
@@ -154,8 +172,12 @@
                     <span id="sizeValue">5px</span>
                 </div>
                 <div class="divider"></div>
-                <button id="undoBtn" class="btn secondary" data-i18n="undo">Undo</button>
-                <button id="redoBtn" class="btn secondary" data-i18n="redo">Redo</button>
+                <button id="undoBtn" class="tool-btn bright" data-i18n="undo" data-i18n-title="undo" data-i18n-no-text>
+                    <img src="static/images/undo.svg" alt="Undo">
+                </button>
+                <button id="redoBtn" class="tool-btn bright" data-i18n="redo" data-i18n-title="redo" data-i18n-no-text>
+                    <img src="static/images/redo.svg" alt="Redo">
+                </button>
                 <div class="divider"></div>
                 <button id="clearBtn" class="btn secondary" data-i18n="clear">Clear</button>
                 <button id="saveBtn" class="btn primary" data-i18n="save">Save</button>

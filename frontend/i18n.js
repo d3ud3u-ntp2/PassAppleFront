@@ -17,6 +17,8 @@ const translations = {
         "back": "Back",
         "pen": "Pen",
         "eraser": "Eraser",
+        "text": "Text",
+        "prompt-text": "Enter text to draw:",
         "coming-soon": "Coming Soon",
         "hint": "Draw with finger or mouse",
         "processing": "Processing Image...",
@@ -51,6 +53,8 @@ const translations = {
         "back": "戻る",
         "pen": "ペン",
         "eraser": "消しゴム",
+        "text": "テキスト",
+        "prompt-text": "描画する文字を入力してください:",
         "coming-soon": "準備中",
         "hint": "指やマウスで描いてください",
         "processing": "画像を処理中...",
@@ -85,6 +89,8 @@ const translations = {
         "back": "返回",
         "pen": "笔",
         "eraser": "橡皮擦",
+        "text": "文本",
+        "prompt-text": "输入要绘制的文本:",
         "coming-soon": "敬请期待",
         "hint": "用手指或鼠标绘图",
         "processing": "正在处理图像...",
@@ -121,6 +127,8 @@ const translations = {
         "back": "뒤로",
         "pen": "펜",
         "eraser": "지우개",
+        "text": "텍스트",
+        "prompt-text": "그릴 텍스트를 입력하세요:",
         "coming-soon": "준비 중",
         "hint": "손가락이나 마우스로 그리세요",
         "processing": "이미지 처리 중...",
@@ -157,6 +165,8 @@ const translations = {
         "back": "К'энаӽ",
         "pen": "К'иԓч",
         "eraser": "Чисткаӽ",
+        "text": "К'оԓч к'иԓч",
+        "prompt-text": "К'иԓч к'оԓч:",
         "coming-soon": "Танӽ...",
         "hint": "К'иԓч к'оԓч",
         "processing": "Обработкаӽ...",
@@ -185,15 +195,25 @@ function t(key) {
 }
 
 function updateContent() {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
+    document.querySelectorAll('[data-i18n], [data-i18n-title]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        const translation = t(key);
-        if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit')) {
-            el.value = translation;
-        } else if (el.tagName === 'IMG') {
-            el.alt = translation;
-        } else {
-            el.textContent = translation;
+        const titleKey = el.getAttribute('data-i18n-title');
+
+        if (key) {
+            const translation = t(key);
+            if (el.tagName === 'INPUT' && (el.type === 'button' || el.type === 'submit')) {
+                el.value = translation;
+            } else if (el.tagName === 'IMG') {
+                el.alt = translation;
+            } else if (el.hasAttribute('data-i18n-no-text')) {
+                // Do nothing to textContent
+            } else {
+                el.textContent = translation;
+            }
+        }
+
+        if (titleKey) {
+            el.title = t(titleKey);
         }
     });
 

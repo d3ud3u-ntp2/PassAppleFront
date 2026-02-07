@@ -9,11 +9,24 @@ const undoBtn = document.getElementById('undoBtn');
 const redoBtn = document.getElementById('redoBtn');
 const penBtn = document.getElementById('penBtn');
 const eraserBtn = document.getElementById('eraserBtn');
+const textBtn = document.getElementById('textBtn');
 
 let isDrawing = false;
-let currentTool = 'pen'; // 'pen' or 'eraser'
+let currentTool = 'pen'; // 'pen', 'eraser', or 'text'
 let lastX = 0;
 let lastY = 0;
+
+// Panning state
+let panX = 0;
+let panY = 0;
+let startPanX = 0;
+let startPanY = 0;
+let isPanning = false;
+let initialMidpoint = null;
+let initialDistance = 0;
+let scale = 1;
+let startScale = 1;
+const transformLayer = document.getElementById('transformLayer');
 
 // History management
 const MAX_HISTORY = 10;
@@ -69,12 +82,55 @@ resizeCanvas();
 
 // Drawing logic
 function startDrawing(e) {
+    if (e.touches && e.touches.length === 2) {
+        isPanning = true;
+        isDrawing = false;
+        initialMidpoint = getMidpoint(e.touches);
+        initialDistance = getDistance(e.touches);
+        startPanX = panX;
+        startPanY = panY;
+        startScale = scale;
+        return;
+    }
+
+    if (currentTool === 'text') {
+        const { x, y } = getCoordinates(e);
+        const text = prompt(i18n.t('prompt-text'));
+        if (text) {
+            ctx.font = `bold ${brushSizeInput.value * 4}px 'Outfit', 'Noto Sans JP', sans-serif`;
+            ctx.fillStyle = STROKE_COLOR;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, x, y);
+            saveState();
+        }
+        return;
+    }
     isDrawing = true;
     const { x, y } = getCoordinates(e);
     [lastX, lastY] = [x, y];
 }
 
 function draw(e) {
+    if (isPanning && e.touches && e.touches.length === 2) {
+        const currentMidpoint = getMidpoint(e.touches);
+        const currentDistance = getDistance(e.touches);
+
+        // Handle Scale
+        if (initialDistance > 0) {
+            const newScale = startScale * (currentDistance / initialDistance);
+            // Limit scale between 0.5 and 5
+            scale = Math.min(Math.max(newScale, 0.5), 5);
+        }
+
+        // Handle Pan (relative to center of fingers)
+        panX = startPanX + (currentMidpoint.x - initialMidpoint.x);
+        panY = startPanY + (currentMidpoint.y - initialMidpoint.y);
+
+        updateTransform();
+        return;
+    }
+
     if (!isDrawing) return;
     e.preventDefault();
 
@@ -89,22 +145,52 @@ function draw(e) {
 }
 
 function stopDrawing() {
+    if (isPanning) {
+        isPanning = false;
+        initialMidpoint = null;
+        return;
+    }
     if (isDrawing) {
         saveState();
     }
     isDrawing = false;
 }
 
+function getMidpoint(touches) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: ((touches[0].clientX + touches[1].clientX) / 2) - rect.left,
+        y: ((touches[0].clientY + touches[1].clientY) / 2) - rect.top
+    };
+}
+
+function getDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
 function getCoordinates(e) {
+    const rect = canvas.getBoundingClientRect();
     let x, y;
     if (e.touches && e.touches.length > 0) {
-        x = e.touches[0].clientX;
-        y = e.touches[0].clientY;
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
     } else {
-        x = e.clientX;
-        y = e.clientY;
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
     }
-    return { x, y };
+
+    // Adjust for pan and scale
+    // Coords on the canvas = (ScreenCoords - Pan) / Scale
+    return {
+        x: (x - panX) / scale,
+        y: (y - panY) / scale
+    };
+}
+
+function updateTransform() {
+    transformLayer.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
 }
 
 // Event Listeners
@@ -140,6 +226,7 @@ penBtn.addEventListener('click', () => {
     ctx.strokeStyle = STROKE_COLOR;
     penBtn.classList.add('active');
     eraserBtn.classList.remove('active');
+    textBtn.classList.remove('active');
 });
 
 eraserBtn.addEventListener('click', () => {
@@ -147,6 +234,14 @@ eraserBtn.addEventListener('click', () => {
     ctx.strokeStyle = BG_COLOR;
     eraserBtn.classList.add('active');
     penBtn.classList.remove('active');
+    textBtn.classList.remove('active');
+});
+
+textBtn.addEventListener('click', () => {
+    currentTool = 'text';
+    textBtn.classList.add('active');
+    penBtn.classList.remove('active');
+    eraserBtn.classList.remove('active');
 });
 
 brushSizeInput.addEventListener('input', (e) => {
