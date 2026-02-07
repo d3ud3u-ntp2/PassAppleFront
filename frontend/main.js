@@ -7,8 +7,11 @@ const saveBtn = document.getElementById('saveBtn');
 
 const undoBtn = document.getElementById('undoBtn');
 const redoBtn = document.getElementById('redoBtn');
+const penBtn = document.getElementById('penBtn');
+const eraserBtn = document.getElementById('eraserBtn');
 
 let isDrawing = false;
+let currentTool = 'pen'; // 'pen' or 'eraser'
 let lastX = 0;
 let lastY = 0;
 
@@ -49,7 +52,7 @@ function resizeCanvas() {
 
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
-    ctx.strokeStyle = STROKE_COLOR;
+    ctx.strokeStyle = currentTool === 'pen' ? STROKE_COLOR : BG_COLOR;
     ctx.lineWidth = brushSizeInput.value;
 
     if (tempImage) {
@@ -131,6 +134,21 @@ if (fruit && fruitMap[fruit]) {
 }
 
 // Controls
+// Tool Switching
+penBtn.addEventListener('click', () => {
+    currentTool = 'pen';
+    ctx.strokeStyle = STROKE_COLOR;
+    penBtn.classList.add('active');
+    eraserBtn.classList.remove('active');
+});
+
+eraserBtn.addEventListener('click', () => {
+    currentTool = 'eraser';
+    ctx.strokeStyle = BG_COLOR;
+    eraserBtn.classList.add('active');
+    penBtn.classList.remove('active');
+});
+
 brushSizeInput.addEventListener('input', (e) => {
     const size = e.target.value;
     ctx.lineWidth = size;
