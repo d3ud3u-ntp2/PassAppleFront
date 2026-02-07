@@ -183,7 +183,7 @@ saveBtn.addEventListener('click', () => {
 
     // Save to server
     saveBtn.disabled = true;
-    saveBtn.textContent = 'Saving...';
+    saveBtn.textContent = i18n.t('saving');
     loadingOverlay.classList.remove('hidden');
 
     fetch(CONFIG.API_URL, {
@@ -201,16 +201,16 @@ saveBtn.addEventListener('click', () => {
                 resultImage.src = data.path;
                 resultModal.classList.remove('hidden');
             } else {
-                alert('Saved to server successfully, but no return path found!');
+                alert(i18n.t('error-no-path'));
             }
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('Error saving to server.');
+            alert(i18n.t('error-save'));
         })
         .finally(() => {
             saveBtn.disabled = false;
-            saveBtn.textContent = 'Save';
+            saveBtn.textContent = i18n.t('save');
             loadingOverlay.classList.add('hidden');
         });
 });

@@ -4,14 +4,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sleek Sketch - White on Black</title>
+    <title data-i18n="title-apple">Sleek Sketch - White on Black</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 0.3rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: auto;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: white;
+            opacity: 0.4;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-family: 'Outfit', sans-serif;
+            padding: 0.2rem 0.6rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-btn.active {
+            opacity: 1;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .hint {
+            position: static;
+            transform: none;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 
-<body>
+<body data-page-title="title-apple">
+    <div class="top-bar">
+        <div style="flex: 1;"></div>
+        <div class="hint" data-i18n="hint">Draw with finger or mouse</div>
+        <div style="flex: 1; display: flex; justify-content: flex-end;">
+            <div class="lang-switch">
+                <button class="lang-btn" id="btn-en" onclick="i18n.setLanguage('en'); updateActiveLang();">EN</button>
+                <button class="lang-btn" id="btn-ja" onclick="i18n.setLanguage('ja'); updateActiveLang();">JA</button>
+            </div>
+        </div>
+    </div>
+
     <div class="app-container">
         <div class="background-layer">
             <img id="baseImage" src="static/images/apple_base.jpg" alt="Background">
@@ -22,27 +90,27 @@
         <div class="ui-overlay">
             <div class="toolbar glass">
                 <div class="tool-group">
-                    <label for="brushSize">Size</label>
+                    <label for="brushSize" data-i18n="brush-size">Size</label>
                     <input type="range" id="brushSize" min="1" max="50" value="5">
                     <span id="sizeValue">5px</span>
                 </div>
                 <div class="divider"></div>
-                <button id="undoBtn" class="btn secondary">Undo</button>
-                <button id="redoBtn" class="btn secondary">Redo</button>
+                <button id="undoBtn" class="btn secondary" data-i18n="undo">Undo</button>
+                <button id="redoBtn" class="btn secondary" data-i18n="redo">Redo</button>
                 <div class="divider"></div>
-                <button id="clearBtn" class="btn secondary">Clear</button>
-                <button id="saveBtn" class="btn primary">Save</button>
-                <a href="index.html" class="btn secondary">Back</a>
+                <button id="clearBtn" class="btn secondary" data-i18n="clear">Clear</button>
+                <button id="saveBtn" class="btn primary" data-i18n="save">Save</button>
+                <a href="index.html" class="btn secondary" data-i18n="back">Back</a>
             </div>
         </div>
 
-        <div class="hint">Draw with finger or mouse</div>
+        <!-- Hint moved to top-bar -->
 
         <!-- Loading Overlay -->
         <div id="loadingOverlay" class="modal-overlay hidden">
             <div class="loader-content">
                 <div class="modern-spinner"></div>
-                <p>Processing Image...</p>
+                <p data-i18n="processing">Processing Image...</p>
             </div>
         </div>
 
@@ -50,20 +118,30 @@
         <div id="resultModal" class="modal-overlay hidden">
             <div class="modal-content glass">
                 <div class="modal-header">
-                    <h3>Processed Result</h3>
+                    <h3 data-i18n="result-title">Processed Result</h3>
                     <button id="closeModal" class="close-btn">&times;</button>
                 </div>
                 <div class="modal-body">
                     <img id="resultImage" src="" alt="Result Image">
                 </div>
                 <div class="modal-footer">
-                    <button id="downloadBtn" class="btn primary">Download Result</button>
+                    <button id="downloadBtn" class="btn primary" data-i18n="download">Download Result</button>
                 </div>
             </div>
         </div>
     </div>
+    <script src="i18n.js"></script>
     <script src="config.js"></script>
     <script src="main.js"></script>
+    <script>
+        function updateActiveLang() {
+            const current = i18n.currentLang();
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            const btn = document.getElementById('btn-' + current);
+            if (btn) btn.classList.add('active');
+        }
+        document.addEventListener('DOMContentLoaded', updateActiveLang);
+    </script>
 </body>
 
 </html>

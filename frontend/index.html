@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Select Your Fruit - Pass Apple</title>
+    <title data-i18n="title-index">Select Your Fruit - Pass Apple</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;600&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
     <style>
         body {
             overflow: auto;
@@ -29,7 +31,10 @@
         .top-nav {
             position: absolute;
             top: 0;
-            right: 3rem;
+            right: 1rem;
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
         }
 
         .about-link {
@@ -44,6 +49,35 @@
 
         .about-link:hover {
             opacity: 1;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            background: none;
+            border: none;
+            color: white;
+            opacity: 0.4;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-family: 'Outfit', sans-serif;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-btn:hover {
+            opacity: 0.8;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .lang-btn.active {
+            opacity: 1;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .selection-header h1 {
@@ -113,35 +147,48 @@
     </style>
 </head>
 
-<body>
+<body data-page-title="title-index">
     <div class="selection-container">
         <nav class="top-nav">
-            <a href="#" class="about-link">About this app</a>
+            <div class="lang-switch">
+                <button class="lang-btn" id="btn-en" onclick="i18n.setLanguage('en'); updateActiveLang();">EN</button>
+                <button class="lang-btn" id="btn-ja" onclick="i18n.setLanguage('ja'); updateActiveLang();">JA</button>
+            </div>
+            <a href="#" class="about-link" data-i18n="about-app">About this app</a>
         </nav>
         <div class="selection-header">
-            <h1>Select a Fruit</h1>
-            <p>Choose your canvas to start drawing</p>
+            <h1 data-i18n="select-fruit">Select a Fruit</h1>
+            <p data-i18n="choose-canvas">Choose your canvas to start drawing</p>
         </div>
 
         <div class="fruit-grid">
             <a href="apple.html?fruit=apple" class="fruit-card">
-                <img src="static/images/apple_base.jpg" alt="Apple">
-                <span>Apple</span>
+                <img src="static/images/apple_base.jpg" alt="Apple" data-i18n="fruit-apple">
+                <span data-i18n="fruit-apple">Apple</span>
             </a>
             <a href="apple.html?fruit=maron" class="fruit-card">
-                <img src="static/images/maron_base.png" alt="Maron">
-                <span>Maron</span>
+                <img src="static/images/maron_base.png" alt="Maron" data-i18n="fruit-maron">
+                <span data-i18n="fruit-maron">Maron</span>
             </a>
             <a href="apple.html?fruit=radish" class="fruit-card">
-                <img src="static/images/radish_base.png" alt="Radish">
-                <span>Radish</span>
+                <img src="static/images/radish_base.png" alt="Radish" data-i18n="fruit-radish">
+                <span data-i18n="fruit-radish">Radish</span>
             </a>
             <a href="apple.html?fruit=watermelon" class="fruit-card">
-                <img src="static/images/watermeron_base.png" alt="Watermelon">
-                <span>Watermelon</span>
+                <img src="static/images/watermeron_base.png" alt="Watermelon" data-i18n="fruit-watermelon">
+                <span data-i18n="fruit-watermelon">Watermelon</span>
             </a>
         </div>
     </div>
+    <script src="i18n.js"></script>
+    <script>
+        function updateActiveLang() {
+            const current = i18n.currentLang();
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn-' + current).classList.add('active');
+        }
+        document.addEventListener('DOMContentLoaded', updateActiveLang);
+    </script>
 </body>
 
 </html>
