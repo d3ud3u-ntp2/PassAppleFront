@@ -33,7 +33,7 @@ const translations = {
         "lang-en": "EN",
         "lang-ja": "JA",
         "about-header-1": "What is Pass Apple?",
-        "about-desc-1": "Pass Apple is a creative sketch application that lets you draw on various fruit canvases. Your strokes are processed using advanced image blending to create unique visual results.",
+        "about-desc-1": "\"Success Apple\" (Goukaku Ringo) is a popular good-luck charm for students. It is created by applying lettering tape to apples before they turn red, so that when they ripen, only the covered parts stay yellow. With this tool, anyone can easily create a wallpaper in the style of these \"Success Apples.\" We also plan to expand this concept to other fruits and vegetables! Please look forward to it.",
         "about-header-2": "How to use",
         "about-desc-2": "1. Select a fruit from the gallery. 2. Draw your design with white ink on the black canvas. 3. Click \"Save\" to process and download your final creation."
     },
@@ -71,7 +71,7 @@ const translations = {
         "lang-en": "英語",
         "lang-ja": "日本語",
         "about-header-1": "Pass Appleとは？",
-        "about-desc-1": "Pass Appleは、様々なフルーツをキャンバスにしてお絵描きができるクリエイティブアプリです。描いた線は高度な画像合成技術によって処理され、ユニークな作品へと仕上がります。",
+        "about-desc-1": "受験のゲン担ぎとして人気の「合格林檎」。 赤く色づく前のりんごに文字テープを貼り、熟した際にその部分だけが黄色く残る仕組みを利用したものです。 このツールを使えば、そんな「合格林檎」風の待ち受け画像を、誰でも簡単に作成できます。また、この仕組みを生かして他のフルーツや野菜にも展開予定！楽しみに待っていてください。",
         "about-header-2": "使い方",
         "about-desc-2": "1. ギャラリーから好きなフルーツを選択します。 2. 黒い画面に白い線で自由に描きます。 3. 「保存」をクリックすると画像が処理され、結果をダウンロードできます。"
     },
@@ -109,7 +109,7 @@ const translations = {
         "lang-zh": "中文",
         "lang-ko": "韩文",
         "about-header-1": "什么是 Pass Apple？",
-        "about-desc-1": "Pass Apple 是一款创意绘图应用，让您可以在不同的水果画布上绘图。您的笔触会通过先进的图像融合技术进行处理，生成独特的视觉效果。",
+        "about-desc-1": "“合格苹果”（Goukaku Ringo）是考生中非常受欢迎的吉祥物。它的制作原理是在苹果变红之前贴上文字胶带，熟透后被遮盖的部分会保持黄色。通过这个工具，任何人都可以轻松制作出“合格苹果”风格的手机壁紙。此外，我们也计划将这一机制应用到其他水果和蔬菜中！敬请期待。",
         "about-header-2": "如何使用",
         "about-desc-2": "1. 从画廊中选择一种水果。 2. 在黑色画布上用白色线条绘图。 3. 点击“保存”以处理并下载您的作品。"
     },
@@ -147,7 +147,7 @@ const translations = {
         "lang-zh": "중국어",
         "lang-ko": "한국어",
         "about-header-1": "Pass Apple이란 무엇입니까?",
-        "about-desc-1": "Pass Apple은 다양한 과일 캔버스 위에 그림을 그릴 수 있는 크리에이티브 스케치 앱입니다. 고급 이미지 블렌딩 기술을 통해 독특한 시각적 결과를 만들어냅니다.",
+        "about-desc-1": "수험생들 사이에서 행운의 상징으로 인기 있는 '합격 사과(고카쿠 링고)'. 사과가 빨갛게 익기 전에 글자 테이프를 붙여, 익었을 때 그 부분만 노란색으로 남게 하는 원리를 이용한 것입니다. 이 툴을 사용하면 누구나 쉽게 '합격 사과' 스타일의 배경화면 이미지를 만들 수 있습니다. 또한, 이 방식을 활용해 다른 과일이나 채소로도 확장할 예정이니 기대해 주세요!",
         "about-header-2": "사용 방법",
         "about-desc-2": "1. 갤러리에서 과일을 선택합니다. 2. 검은색 캔버스 위에 흰색 선으로 그림을 그립니다. 3. '저장'을 클릭하여 이미지를 처리하고 다운로드합니다."
     },
